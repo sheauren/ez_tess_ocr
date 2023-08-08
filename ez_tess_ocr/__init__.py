@@ -10,9 +10,10 @@ __relative_tesslib_path = "../"
 for _ in range(5):
     if os.path.exists(os.path.join(base_dir, __relative_tesslib_path, "tesslib")):
         break
+    __relative_tesslib_path+='../'
 
-os.environ["TESSDATA_PREFIX"] = os.path.join(
-    os.path.join(base_dir, __relative_tesslib_path, "tesslib", "tessdata")
+os.environ["TESSDATA_PREFIX"] = os.path.normpath(
+    os.path.join(os.path.join(base_dir, __relative_tesslib_path, "tesslib", "tessdata"))
 )
 if os.name == "nt":
     os.putenv("PATH", os.path.join(base_dir, __relative_tesslib_path, "tesslib"))
@@ -48,10 +49,11 @@ class EzTessOrc:
 
     def conf(self):
         return ocr_conf(self.api)
-    
+
     def release(self):
         release_ocr(self.api)
         self.api = None
+
 
 def create_ocr(char_whitelist=None, lang="eng"):
     global __api_dict
@@ -105,6 +107,7 @@ def create_ocr(char_whitelist=None, lang="eng"):
     __api_dict[name] = api
     return api
 
+
 def ocr_image(api, image):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     h, w = image.shape
@@ -112,16 +115,19 @@ def ocr_image(api, image):
     txt = lib.TessBaseAPIGetUTF8Text(api)
     return ctypes.string_at(txt).decode("utf-8").strip()
 
+
 def ocr_conf(api):
     return lib.TessBaseAPIMeanTextConf(api)
+
 
 def release_ocr(api):
     lib.TessBaseAPIEnd(api)
     lib.TessBaseAPIDelete(api)
 
+
 def release_all():
     global __api_dict
-    for api in __api_dict:
+    for api in __api_dict.values():
         release_ocr(api)
     __api_dict.clear()
 
@@ -131,5 +137,6 @@ if __name__ == "__main__":
     image = cv2.imread("./testing/ocr_test.png")
     text = ocr_image(api, image)
     conf = ocr_conf(api)
-    release_ocr(api)
+    #release_ocr(api)
+    release_all()
     print("text", text, "conf", conf)

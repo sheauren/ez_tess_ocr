@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="ez_tess_ocr",
-    version="0.0.1",
+    version="0.0.2",
     author="Sheauren Wang",
     author_email="sheauren@gmail.com",
     description="OCR by tesseract c++ library",

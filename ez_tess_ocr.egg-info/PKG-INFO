@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: ez-tess-ocr
-Version: 0.0.1
+Version: 0.0.2
 Summary: OCR by tesseract c++ library
 Home-page: https://github.com/sheauren/ez_tess_ocr
 Author: Sheauren Wang
